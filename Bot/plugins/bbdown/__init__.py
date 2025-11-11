@@ -4,6 +4,7 @@ from nonebot.plugin import PluginMetadata
 from .config import Config
 from nonebot import on_command
 import requests # type: ignore
+from time import time
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, Event, MessageEvent
 
 
@@ -21,11 +22,12 @@ bbdown = on_command("dl")
 @bbdown.handle()
 async def bbdown_handle(event: MessageEvent):
     if not event.reply:
+        await time.sleep(1)
         await bbdown.finish("并非reply喵")
     reply = event.reply
     reply_msg = reply.message
-    rich_text = reply_msg.to_rich_text()
-    await bbdown.send(reply_msg)
-    await bbdown.finish("提取到了:\n" + rich_text)
+    url = ""
+    print(reply_msg[0].data)
+    await bbdown.finish("功能维护中喵")
 
 
