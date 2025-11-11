@@ -56,7 +56,7 @@ async def bbdown_handle(event: MessageEvent):
                     url = await redirect(url)
                     result = await run_bbdown(url, audio_only=False, timeout=30)
 
-                if result is not None:
+                if result != "None":
                     await bbdown.finish(f"BBDown输出{result}")
                 else:
                     path = find(name, audio_only=("-audio" in event.get_message().extract_plain_text()))
@@ -64,7 +64,8 @@ async def bbdown_handle(event: MessageEvent):
                         await bbdown.send("下载失败喵")
                         return
                     seg = MessageSegment.video(f"file://{path}")
-                    await bbdown.send(Message(seg))
+                    id = event.get_user_id()
+                    await bbdown.send(MessageSegment.at(id) + Message(seg))
                     delete(path)
                     await bbdown.finish("下载完成喵")
 
@@ -75,6 +76,7 @@ async def bbdown_handle(event: MessageEvent):
     except:
         await asyncio.sleep(0.5)
         if "FinishedException()" in traceback.format_exc(): return
+        elif "WebSocket call api" in traceback.format_exc(): return
         await bbdown.send("死了喵")
         await bbdown.finish(traceback.format_exc())
 
