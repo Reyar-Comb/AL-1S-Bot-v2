@@ -56,18 +56,24 @@ async def bbdown_handle(event: MessageEvent):
                     url = await redirect(url)
                     result = await run_bbdown(url, audio_only=False, timeout=30)
 
-                if result != "None":
-                    await bbdown.finish(f"BBDown输出{result}")
-                else:
+                msg = f"BBDown输出{result}"
+                if "None" in msg:
+                    await bbdown.send("下载成功喵, 正在尝试发送喵")
+
                     path = find(name, audio_only=("-audio" in event.get_message().extract_plain_text()))
                     if path == "err":
                         await bbdown.send("下载失败喵")
                         return
                     seg = MessageSegment.video(f"file://{path}")
                     id = event.get_user_id()
-                    await bbdown.send(MessageSegment.at(id) + Message(seg))
+                    await bbdown.send(Message(seg))
                     delete(path)
                     await bbdown.finish("下载完成喵")
+
+                else:
+                    await bbdown.finish(f"BBDown输出{result}")
+                
+                    
 
             else:
                 await bbdown.send("并非bilibili视频喵")
@@ -98,7 +104,6 @@ async def run_bbdown(url: str, audio_only: bool, timeout: int = 600):
             "--work-dir", "/root/Video")
     try:
         stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout)
-        await bbdown.send(f"{stdout}")
     except asyncio.TimeoutError:
         proc.kill()
         await bbdown.send("下载超时喵")
