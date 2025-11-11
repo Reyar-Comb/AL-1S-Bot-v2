@@ -67,11 +67,17 @@ async def run_bbdown(url: str, audio_only: bool, timeout: int = 600):
     bbdown_cmd = shutil.which("BBDown")
     if not bbdown_cmd:
         await bbdown.send("BBDown没找到喵")
-    proc = await asyncio.create_subprocess_exec(
-        bbdown_cmd, # type: ignore
-        url,
-        "--audio-only" if audio_only else "",
-        "--work-dir", "/root/Video")
+    if audio_only:
+        proc = await asyncio.create_subprocess_exec(
+            bbdown_cmd, # type: ignore
+            url,
+            "--audio-only",
+            "--work-dir", "/root/Video")
+    else:
+        proc = await asyncio.create_subprocess_exec(
+            bbdown_cmd, # type: ignore
+            url,
+            "--work-dir", "/root/Video")
     try:
         stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout)
         await bbdown.finish("下载完成喵")
