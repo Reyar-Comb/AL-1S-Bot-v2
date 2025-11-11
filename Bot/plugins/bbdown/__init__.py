@@ -68,7 +68,7 @@ async def bbdown_handle(event: MessageEvent):
                     id = event.get_user_id()
                     await bbdown.send(Message(seg))
                     delete(path)
-                    await bbdown.finish("下载完成喵")
+                    await bbdown.finish(MessageSegment.at(id) + " 已发送喵")
 
                 else:
                     await bbdown.finish(f"BBDown输出{result}")
