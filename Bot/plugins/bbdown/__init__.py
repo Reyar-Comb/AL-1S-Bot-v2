@@ -36,11 +36,17 @@ async def bbdown_handle(event: MessageEvent):
         seg = reply_msg[0]
         data = seg.data["data"]
         
-        if isinstance(data, dict):
-            await bbdown.send("这是个字典喵")
-            await bbdown.send(str(data))
-        elif isinstance(data, str):
-            await bbdown.send(data)
+        if isinstance(data, str):
+            if "哔哩哔哩" in data:
+                data = data.replace('\n', '')
+                data = data.replace('\\/', '/')
+                parsed = json.loads(data)
+                url = parsed['meta']['detail_1']['qqdocurl']
+                await bbdown.send(f"下载链接喵：{url}")
+            else:
+                await bbdown.send("这不是哔哩哔哩小程序喵")
+        else:
+            await bbdown.send("这不是哔哩哔哩小程序喵")
     except:
         await asyncio.sleep(0.5)
         await bbdown.send("死了喵")
