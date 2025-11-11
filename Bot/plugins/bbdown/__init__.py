@@ -60,7 +60,7 @@ async def bbdown_handle(event: MessageEvent):
                 if "None" in msg:
                     await bbdown.send("下载成功喵, 正在尝试发送喵")
 
-                    path = find(name, audio_only=("-audio" in event.get_message().extract_plain_text()))
+                    path = await find(name, audio_only=("-audio" in event.get_message().extract_plain_text()))
                     if path == "err":
                         await bbdown.send("下载失败喵")
                         return
@@ -128,9 +128,10 @@ async def redirect(url: str) -> str:
         await bbdown.send("展开短链失败喵")
         return url
 
-def find(name: str, audio_only: bool) -> str:
+async def find(name: str, audio_only: bool) -> str:
     for root, dirs, files in os.walk("/root/Video"):
         for file in files:
+            await bbdown.send(f"Checking file: {file}")
             return os.path.join(root, file)
     return "err"
 
