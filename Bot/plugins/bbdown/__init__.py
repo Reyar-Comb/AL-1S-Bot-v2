@@ -20,7 +20,7 @@ bbdown = on_command("dl")
 @bbdown.handle()
 async def bbdown_handle(event: Event):
     msg = event.get_message()[0].data
-    await bbdown.finish(msg["type"]);
+    await bbdown.finish(str(msg));
 
 
 
