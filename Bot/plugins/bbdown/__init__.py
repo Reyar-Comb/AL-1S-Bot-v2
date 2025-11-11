@@ -131,8 +131,8 @@ async def redirect(url: str) -> str:
 async def find(name: str, audio_only: bool) -> str:
     for root, dirs, files in os.walk("/root/Video"):
         for file in files:
-            await bbdown.send(f"Checking file: {file}")
-            return os.path.join(root, file)
+            if name in file:
+                return os.path.join(root, file)
     return "err"
 
 def delete(url: str):
