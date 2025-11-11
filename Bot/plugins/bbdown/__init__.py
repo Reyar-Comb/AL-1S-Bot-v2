@@ -4,7 +4,7 @@ from nonebot.plugin import PluginMetadata
 from .config import Config
 from nonebot import on_command
 import requests # type: ignore
-from time import time
+import time
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, Event, MessageEvent
 
 
@@ -22,7 +22,7 @@ bbdown = on_command("dl")
 @bbdown.handle()
 async def bbdown_handle(event: MessageEvent):
     if not event.reply:
-        await time.sleep(1)
+        time.sleep(1)
         await bbdown.finish("并非reply喵")
     reply = event.reply
     reply_msg = reply.message
