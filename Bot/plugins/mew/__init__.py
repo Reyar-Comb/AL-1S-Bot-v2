@@ -5,7 +5,7 @@ from .config import Config
 import random
 from nonebot import on_command
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, Event
-import requests
+import requests  # type: ignore
 import time
 
 __plugin_meta__ = PluginMetadata(
