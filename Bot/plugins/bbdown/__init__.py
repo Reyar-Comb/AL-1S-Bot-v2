@@ -47,8 +47,11 @@ async def bbdown_handle(event: MessageEvent):
 
                 if "-audio" in event.get_message().extract_plain_text():
                     await bbdown.send(f"解析成功！{url}\n选择了仅音频模式喵, 下载进程开始了喵～")
+                    result = await run_bbdown(url, audio_only=True, timeout=60)
                 else :
                     await bbdown.send(f"解析成功！{url}\n默认下载最高画质喵, 下载进程开始了喵～")
+                    result = await run_bbdown(url, audio_only=False, timeout=30)
+                await bbdown.finish(f"BBDown输出"{result})
             else:
                 await bbdown.send("并非bilibili视频喵")
         else:
