@@ -35,6 +35,12 @@ async def bbdown_handle(event: MessageEvent):
         await asyncio.sleep(0.5)
         seg = reply_msg[0]
         data = seg.data
+        if isinstance(data, str):
+            await bbdown.send("str")
+        elif isinstance(data, dict):
+            await bbdown.send("dict")
+        elif isinstance(data, json):
+            await bbdown.send("json")
         parsed = json.loads(json.dumps(data))
         print(parsed)
         url = (parsed.get("meta", {}).get("detail_1", {}).get("qqdocurl", ""))
