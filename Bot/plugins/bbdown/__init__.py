@@ -8,6 +8,7 @@ import asyncio
 import time
 import logging
 import traceback
+import json
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, Event, MessageEvent
 
 
@@ -32,8 +33,14 @@ async def bbdown_handle(event: MessageEvent):
     url = ""
     try:
         await asyncio.sleep(0.5)
-        url = reply_msg[0].data["meta"]["detail_1"]["qqdocurl"]
-        await bbdown.finish(f"下载链接喵：{url}")
+        seg = reply_msg[0]
+        data = seg.data
+        if isinstance(data, str):
+            await bbdown.finish("reply的是字符串喵")
+        else:
+            parsed = json.loads(json.dumps(data))
+            url = (parsed.get("meta", {}).get("detail_1", {}).get("qqdocurl", ""))
+            await bbdown.finish(f"下载链接喵：{url}")
     except:
         await asyncio.sleep(0.5)
         await bbdown.send("死了喵")
