@@ -35,12 +35,10 @@ async def bbdown_handle(event: MessageEvent):
         await asyncio.sleep(0.5)
         seg = reply_msg[0]
         data = seg.data
-        if isinstance(data, str):
-            await bbdown.finish("reply的是字符串喵")
-        else:
-            parsed = json.loads(json.dumps(data))
-            url = (parsed.get("meta", {}).get("detail_1", {}).get("qqdocurl", ""))
-            await bbdown.finish(f"下载链接喵：{url}")
+        parsed = json.loads(json.dumps(data))
+        print(parsed)
+        url = (parsed.get("meta", {}).get("detail_1", {}).get("qqdocurl", ""))
+        await bbdown.send(f"下载链接喵：{url}")
     except:
         await asyncio.sleep(0.5)
         await bbdown.send("死了喵")
