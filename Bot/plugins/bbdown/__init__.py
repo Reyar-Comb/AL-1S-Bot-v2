@@ -19,9 +19,9 @@ bbdown = on_command("dl")
 
 @bbdown.handle()
 async def bbdown_handle(event: Event):
-    msg = event.get_message()[0].data
-    await bbdown.finish(str(msg));
-
-
+    msgs: Message = Message()
+    for i in event.get_message():
+        msgs += i
+    await bbdown.finish(str(msgs))
 
 
