@@ -38,6 +38,8 @@ async def bbdown_handle(event: MessageEvent):
         if isinstance(data, dict):
             print(data.keys())
             url = data.get("qqdocurl", "")
+            await bbdown.send(f"检测到链接：{url}，正在下载喵")
+            await bbdown.send(str(data.keys()))
     except:
         await asyncio.sleep(0.5)
         await bbdown.send("死了喵")
