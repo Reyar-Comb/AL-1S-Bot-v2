@@ -71,6 +71,7 @@ async def run_bbdown(url: str, audio_only: bool, timeout: int = 600):
         "--work-dir", "/root/Video")
     try:
         stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout)
+        await bbdown.finish("下载完成喵")
     except asyncio.TimeoutError:
         proc.kill()
         await bbdown.send("下载超时喵")
