@@ -4,7 +4,10 @@ from nonebot.plugin import PluginMetadata
 from .config import Config
 from nonebot import on_command
 import requests # type: ignore
+import asyncio
 import time
+import logging
+import traceback
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, Event, MessageEvent
 
 
@@ -22,12 +25,18 @@ bbdown = on_command("dl")
 @bbdown.handle()
 async def bbdown_handle(event: MessageEvent):
     if not event.reply:
-        time.sleep(1)
+        await asyncio.sleep(0.5)
         await bbdown.finish("并非reply喵")
     reply = event.reply
     reply_msg = reply.message
     url = ""
-    print(reply_msg[0].data)
-    await bbdown.finish("功能维护中喵")
+    try:
+        await asyncio.sleep(0.5)
+        url = reply_msg[0].data["meta"]["detail_1"]["qqdocurl"]
+        await bbdown.finish(f"下载链接喵：{url}")
+    except:
+        await asyncio.sleep(0.5)
+        await bbdown.send("死了喵")
+        await bbdown.finish(traceback.format_exc())
 
 
