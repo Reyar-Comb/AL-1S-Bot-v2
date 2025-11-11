@@ -11,6 +11,7 @@ import traceback
 import json
 import shutil
 import subprocess
+import os
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, Event, MessageEvent
 
 
@@ -44,6 +45,7 @@ async def bbdown_handle(event: MessageEvent):
                 data = data.replace('\\/', '/')
                 parsed = json.loads(data)
                 url = parsed['meta']['detail_1']['qqdocurl']
+                name = parsed['meta']['detail_1']['desc']
 
                 if "-audio" in event.get_message().extract_plain_text():
                     await bbdown.send(f"解析成功！{url}\n选择了仅音频模式喵, 下载进程开始了喵～")
@@ -53,7 +55,19 @@ async def bbdown_handle(event: MessageEvent):
                     await bbdown.send(f"解析成功！{url}\n默认下载最高画质喵, 下载进程开始了喵～")
                     url = await redirect(url)
                     result = await run_bbdown(url, audio_only=False, timeout=30)
-                await bbdown.finish(f"BBDown输出{result}")
+
+                if result is not None:
+                    await bbdown.finish(f"BBDown输出{result}")
+                else:
+                    path = find(name, audio_only=("-audio" in event.get_message().extract_plain_text()))
+                    if path == "err":
+                        await bbdown.send("下载失败喵")
+                        return
+                    seg = MessageSegment.video(f"file://{path}")
+                    await bbdown.send(Message(seg))
+                    delete(path)
+                    await bbdown.finish("下载完成喵")
+
             else:
                 await bbdown.send("并非bilibili视频喵")
         else:
@@ -106,3 +120,15 @@ async def redirect(url: str) -> str:
         logging.error(f"Redirect error: {e}")
         await bbdown.send("展开短链失败喵")
         return url
+
+def find(name: str, audio_only: bool) -> str:
+    for root, dirs, files in os.walk("/root/Video"):
+        for file in files:
+            return os.path.join(root, file)
+    return "err"
+
+def delete(url: str):
+    try:
+        os.remove(url)
+    except Exception as e:
+        logging.error(f"Delete error: {e}")
