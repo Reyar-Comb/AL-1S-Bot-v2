@@ -47,9 +47,11 @@ async def bbdown_handle(event: MessageEvent):
 
                 if "-audio" in event.get_message().extract_plain_text():
                     await bbdown.send(f"解析成功！{url}\n选择了仅音频模式喵, 下载进程开始了喵～")
+                    url = await redirect(url)
                     result = await run_bbdown(url, audio_only=True, timeout=60)
                 else :
                     await bbdown.send(f"解析成功！{url}\n默认下载最高画质喵, 下载进程开始了喵～")
+                    url = await redirect(url)
                     result = await run_bbdown(url, audio_only=False, timeout=30)
                 await bbdown.finish(f"BBDown输出{result}")
             else:
@@ -80,7 +82,7 @@ async def run_bbdown(url: str, audio_only: bool, timeout: int = 600):
             "--work-dir", "/root/Video")
     try:
         stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout)
-        await bbdown.finish("下载完成喵")
+        await bbdown.send(f"{stdout}")
     except asyncio.TimeoutError:
         proc.kill()
         await bbdown.send("下载超时喵")
@@ -89,3 +91,18 @@ async def run_bbdown(url: str, audio_only: bool, timeout: int = 600):
         await bbdown.send("下载失败喵")
         return None
     return stdout
+
+async def redirect(url: str) -> str:
+    headers = {
+        "User-Agent": "Mozilla/5.0 (compatible; AL-1S-Bot/1.0)"
+    }
+    try:
+        response = await asyncio.to_thread(
+            lambda: requests.get(url, allow_redirects=True, timeout=10, headers=headers)
+        )
+        final = getattr(response, 'url', url) or url
+        return final
+    except Exception as e:
+        logging.error(f"Redirect error: {e}")
+        await bbdown.send("展开短链失败喵")
+        return url
