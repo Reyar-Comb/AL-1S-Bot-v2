@@ -10,11 +10,11 @@ def get_scramble(mode: str = "3") -> str:
         data = json.load(f)
         index = data["index"]
 
-    match mode:
-        case "3":
-            with open(scramble_path, "r", encoding="utf-8") as f:
-                scrambles = f.readlines()
-                scramble = scrambles[int(index)].strip()
+
+    with open(scramble_path, "r", encoding="utf-8") as f:
+        scrambles = f.readlines()
+        scramble = scrambles[int(index)].strip()
+
     
     with open(index_path, "w") as f:
         data["index"] = str((int(index) + 1) % len(scrambles))
