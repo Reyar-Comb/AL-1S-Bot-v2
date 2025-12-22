@@ -4,7 +4,7 @@ from nonebot import on_command
 from .config import Config
 from nonebot.adapters.onebot.v11 import Message, MessageSegment, Event
 from .get_comp import get_comp
-from time import time
+import time
 __plugin_meta__ = PluginMetadata(
     name="Comp",
     description="",
