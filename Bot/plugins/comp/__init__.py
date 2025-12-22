@@ -20,4 +20,5 @@ comp = on_command("comp")
 async def comp_handle():
     time.sleep(1)
     result = get_comp()
+    result += "戳这里看更多哦：\nhttps://cubing.com/competition"
     await comp.finish(result)
