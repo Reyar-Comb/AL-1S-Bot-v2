@@ -15,6 +15,8 @@ __plugin_meta__ = PluginMetadata(
 config = get_plugin_config(Config)
 
 comp = on_command("comp")
+
+@comp.handle()
 async def comp_handle():
     time.sleep(1)
     result = get_comp()
